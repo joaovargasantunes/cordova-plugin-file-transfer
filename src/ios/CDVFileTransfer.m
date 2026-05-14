@@ -550,6 +550,20 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
     return result;
 }
 
+- (void)setMaxConnections:(CDVInvokedUrlCommand*)command
+{
+    NSInteger maxConnections = [[command argumentAtIndex:0 withDefault:@40] integerValue];
+    if (maxConnections < 1) maxConnections = 1;
+
+    [self.session invalidateAndCancel];
+
+    NSURLSessionConfiguration* config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.HTTPMaximumConnectionsPerHost = maxConnections;
+    self.session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:self.queue];
+
+    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:command.callbackId];
+}
+
 - (void)onReset {
     @synchronized (activeTransfers) {
         while ([activeTransfers count] > 0) {

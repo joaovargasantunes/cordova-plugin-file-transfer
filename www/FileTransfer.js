@@ -236,4 +236,12 @@ FileTransfer.prototype.abort = function() {
     exec(null, null, 'FileTransfer', 'abort', [this._id]);
 };
 
+/**
+ * Sets the maximum number of concurrent connections per host for all transfers.
+ * @param {number} maxConnections
+ */
+FileTransfer.setMaxConnections = function(maxConnections) {
+    exec(null, null, 'FileTransfer', 'setMaxConnections', [maxConnections]);
+};
+
 module.exports = FileTransfer;
